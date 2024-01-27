@@ -28,7 +28,7 @@ class Window:
     def close(self):
         self.__is_running = False
 
-    def draw_line(self, line, fill_color):
+    def draw_line(self, line, fill_color="black"):
         line.draw(self.__canvas, fill_color)
 
 # point classs 2 public data x and y coords
@@ -71,21 +71,29 @@ class Cell:
     def draw(self):
         if self.has_left_wall:
             temp_line = Line(Point(self._x1,self._y1),Point(self._x1,self._y2))
-            self._win.draw_line(temp_line, "red")
+            self._win.draw_line(temp_line)
 
         if self.has_right_wall:
             temp_line = Line(Point(self._x2,self._y1),Point(self._x2,self._y2))
-            self._win.draw_line(temp_line, "red")
+            self._win.draw_line(temp_line)
 
         if self.has_top_wall:
             temp_line = Line(Point(self._x1,self._y1),Point(self._x2,self._y1))
-            self._win.draw_line(temp_line, "red")
+            self._win.draw_line(temp_line)
 
         if self.has_bottom_wall:
             temp_line = Line(Point(self._x1,self._y2),Point(self._x2,self._y2))
-            self._win.draw_line(temp_line, "red")
+            self._win.draw_line(temp_line)
 
-
+    
+    def get_midpoint(self):
+        return Point(((self._x1 + self._x2) // 2),((self._y1 + self._y2) // 2))
+    
+    def draw_move(self, to_cell, undo=False):
+        if not undo:
+            self._win.draw_line(Line(self.get_midpoint(), to_cell.get_midpoint()), "red")
+        else:
+            self._win.draw_line(Line(self.get_midpoint(), to_cell.get_midpoint()), "grey")
 
 
 def main():
@@ -93,6 +101,11 @@ def main():
 
     test_cell = Cell(100,200,100,200,win)
     test_cell.draw()
+
+    test_cell2 = Cell(300,200,300,200,win)
+    test_cell2.draw()
+
+    test_cell.draw_move(test_cell2)
 
 
     win.wait_for_close()
